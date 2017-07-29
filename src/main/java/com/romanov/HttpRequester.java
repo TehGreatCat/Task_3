@@ -25,18 +25,16 @@ public class HttpRequester {
     }
 
     public String TranslateRequester(String text) throws IOException, HttpException, JSONException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("https://translate.yandex.net/api/v1.5/tr.json/translate?").
-                append("key=").append(API_KEY).
-                append("&lang=en-ru").
-                append("&text=").append(URLEncoder.encode(text, "UTF-8"));
+        String sb = "https://translate.yandex.net/api/v1.5/tr.json/translate?" +
+                "key=" + API_KEY +
+                "&lang=en-ru" +
+                "&text=" + URLEncoder.encode(text, "UTF-8");
         HttpResponse response;
-        HttpPost req = new HttpPost(sb.toString());
+        HttpPost req = new HttpPost(sb);
         response = httpClient.execute(req);
         if (response.getStatusLine().getStatusCode() == 200) {
             JSONObject json = new JSONObject(EntityUtils.toString(response.getEntity()));
-            String trasnlation = json.getJSONArray("text").getString(0);
-            return trasnlation;
+            return json.getJSONArray("text").getString(0);
         } else {
             return "something went wrong";
         }
